@@ -47,24 +47,26 @@ class ElasticOverscrollEffect(
     @FloatRange(from = 0.1, to = 2.0)
     var snapBackForce: Float? = null,
     var orientation: Orientation = Orientation.Vertical,
-    var lockedEdge: ElasticOverscrollEdgeLock? = null,
-    var onProgress: ((percentage: Float) -> Unit)? = null,
-    var onReleased: ((percentage: Float) -> Unit)? = null,
+    var lockedEdge: ElasticOverscrollEdge? = null,
+    var onProgress: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null,
+    var onReleased: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null,
     var isRtl: Boolean = false
 ) : OverscrollEffect {
 
     /** The current translation offset value in pixels. */
-    var overscrollValue by mutableFloatStateOf(0f)
+    var mOverscrollValue by mutableFloatStateOf(0f)
 
-    private val drawNode = ElasticOverscrollNode(this)
+    private val mDrawNode = ElasticOverscrollNode(this)
 
     override val node: DelegatableNode
-        get() = drawNode
+        get() = mDrawNode
 
     override val isInProgress: Boolean
-        get() = overscrollValue != 0f
+        get() = mOverscrollValue != 0f
 
-    private var lastReportedProgress: Float = -1f
+    private var mActiveEdge: ElasticOverscrollEdge = ElasticOverscrollEdge.NONE
+
+    private var mLastReportedProgress: Float = -1f
 
     override fun applyToScroll(
         delta: Offset,
@@ -74,39 +76,39 @@ class ElasticOverscrollEffect(
 
         val delta1D = if (orientation == Orientation.Vertical) delta.y else delta.x
 
-        var consumed1D = 0f
+        var consumed = 0f
 
         // Dynamic friction based on user configuration ($maxStretchRatio$)
         val dynamicFriction = (maxStretchRatio * 2.5f).coerceIn(0.2f, 1f)
 
         // 1. Handle Pull-back logic (if we are already overScrolled and pulling in opposite direction)
-        if (overscrollValue != 0f) {
+        if (mOverscrollValue != 0f) {
 
-            val isPullingBack = sign(delta1D) != sign(overscrollValue)
+            val isPullingBack = sign(delta1D) != sign(mOverscrollValue)
 
             if (isPullingBack) {
 
-                val newValue = overscrollValue + (delta1D * dynamicFriction)
+                val newValue = mOverscrollValue + (delta1D * dynamicFriction)
 
-                if (sign(newValue) != sign(overscrollValue)) {
+                if (sign(newValue) != sign(mOverscrollValue)) {
 
-                    val consumedToZero = overscrollValue / dynamicFriction
+                    val consumedToZero = mOverscrollValue / dynamicFriction
 
-                    consumed1D = -consumedToZero
+                    consumed = -consumedToZero
 
-                    overscrollValue = 0f
+                    mOverscrollValue = 0f
 
                 } else {
 
-                    consumed1D = delta1D
+                    consumed = delta1D
 
-                    overscrollValue = newValue
+                    mOverscrollValue = newValue
                 }
             }
         }
 
         // 2. Perform regular scroll for the remaining delta
-        val remainingForScroll1D = delta1D - consumed1D
+        val remainingForScroll1D = delta1D - consumed
 
         val remainingForScrollOffset = if (orientation == Orientation.Vertical) {
             Offset(0f, remainingForScroll1D)
@@ -116,24 +118,56 @@ class ElasticOverscrollEffect(
 
         val consumedByScrollOffset = performScroll(remainingForScrollOffset)
 
-        val consumedByScroll1D = if (orientation == Orientation.Vertical) {
+        val consumedByScroll = if (orientation == Orientation.Vertical) {
             consumedByScrollOffset.y
         } else {
             consumedByScrollOffset.x
         }
 
-        consumed1D += consumedByScroll1D
+        consumed += consumedByScroll
 
-        val remainingDelta1D = delta1D - consumed1D
+        val remainingDelta1D = delta1D - consumed
 
         val isDrag = source == NestedScrollSource.UserInput
+
+        if (mActiveEdge == ElasticOverscrollEdge.NONE && mOverscrollValue != 0F) {
+
+            mActiveEdge = when (orientation) {
+
+                Orientation.Vertical -> {
+
+                    if (mOverscrollValue > 0f) {
+
+                        ElasticOverscrollEdge.TOP
+
+                    } else {
+
+                        ElasticOverscrollEdge.BOTTOM
+
+                    }
+                }
+
+                Orientation.Horizontal -> {
+
+                    if (mOverscrollValue > 0f) {
+
+                        if (isRtl) ElasticOverscrollEdge.END else ElasticOverscrollEdge.START
+
+                    } else {
+
+                        if (isRtl) ElasticOverscrollEdge.START else ElasticOverscrollEdge.END
+
+                    }
+                }
+            }
+        }
 
         // 3. Overscroll Edge Lock Evaluation
         val isLocked = when (orientation) {
 
             Orientation.Vertical -> {
-                (remainingDelta1D > 0f && lockedEdge == ElasticOverscrollEdgeLock.TOP) ||
-                    (remainingDelta1D < 0f && lockedEdge == ElasticOverscrollEdgeLock.BOTTOM)
+                (remainingDelta1D > 0f && lockedEdge == ElasticOverscrollEdge.TOP) ||
+                    (remainingDelta1D < 0f && lockedEdge == ElasticOverscrollEdge.BOTTOM)
             }
 
             Orientation.Horizontal -> {
@@ -141,17 +175,17 @@ class ElasticOverscrollEffect(
                 if (remainingDelta1D > 0f) { // Pulling Right
 
                     if (isRtl) {
-                        lockedEdge == ElasticOverscrollEdgeLock.END
+                        lockedEdge == ElasticOverscrollEdge.END
                     } else {
-                        lockedEdge == ElasticOverscrollEdgeLock.START
+                        lockedEdge == ElasticOverscrollEdge.START
                     }
 
                 } else if (remainingDelta1D < 0f) { // Pulling Left
 
                     if (isRtl) {
-                        lockedEdge == ElasticOverscrollEdgeLock.START
+                        lockedEdge == ElasticOverscrollEdge.START
                     } else {
-                        lockedEdge == ElasticOverscrollEdgeLock.END
+                        lockedEdge == ElasticOverscrollEdge.END
                     }
 
                 } else false
@@ -161,23 +195,23 @@ class ElasticOverscrollEffect(
         // 4. Apply Advanced Stretch Physics (if not locked)
         if (remainingDelta1D != 0f && isDrag && !isLocked) {
 
-            val progress = (abs(overscrollValue) / maxOverscroll).coerceIn(0f, 1f)
+            val progress = (abs(mOverscrollValue) / maxOverscroll).coerceIn(0f, 1f)
 
             // Exponential resistance ($$ (1-x)^2 $$) acting as an invisible wall
             val resistance = (1f - progress) * (1f - progress)
 
             val deltaWithResistance = remainingDelta1D * dynamicFriction * resistance
 
-            val newValue = overscrollValue + deltaWithResistance
+            val newValue = mOverscrollValue + deltaWithResistance
 
-            overscrollValue = newValue.coerceIn(-maxOverscroll, maxOverscroll)
+            mOverscrollValue = newValue.coerceIn(-maxOverscroll, maxOverscroll)
 
-            consumed1D += remainingDelta1D
+            consumed += remainingDelta1D
         }
 
         if (onProgress != null) {
 
-            val progress = (abs(overscrollValue) / maxOverscroll).coerceIn(0f, 1f)
+            val progress = (abs(mOverscrollValue) / maxOverscroll).coerceIn(0f, 1f)
 
             var roundedProgress = (progress * 10000f).roundToInt() / 10000f
 
@@ -185,18 +219,22 @@ class ElasticOverscrollEffect(
                 roundedProgress = 0f
             }
 
-            if (roundedProgress != lastReportedProgress) {
+            if (roundedProgress != mLastReportedProgress) {
 
-                lastReportedProgress = roundedProgress
+                mLastReportedProgress = roundedProgress
 
-                onProgress?.invoke(roundedProgress)
+                onProgress?.invoke(roundedProgress, mActiveEdge)
+
+                if (roundedProgress == 0f) {
+                    mActiveEdge = ElasticOverscrollEdge.NONE
+                }
             }
         }
 
         return if (orientation == Orientation.Vertical) {
-            Offset(0f, consumed1D)
+            Offset(0f, consumed)
         } else {
-            Offset(consumed1D, 0f)
+            Offset(consumed, 0f)
         }
     }
 
@@ -205,9 +243,16 @@ class ElasticOverscrollEffect(
         performFling: suspend (Velocity) -> Velocity
     ) {
 
+        if (mOverscrollValue != 0f) {
+            val percentage = (abs(mOverscrollValue) / maxOverscroll).coerceIn(0f, 1f)
+            if (percentage > 0f) {
+                onReleased?.invoke(percentage, mActiveEdge)
+            }
+        }
+
         performFling(velocity)
 
-        if (overscrollValue != 0f) {
+        if (mOverscrollValue != 0f) {
 
             val stiffness = if (snapBackForce != null) {
 
@@ -215,7 +260,7 @@ class ElasticOverscrollEffect(
 
             } else {
 
-                val distance = abs(overscrollValue)
+                val distance = abs(mOverscrollValue)
 
                 when {
                     distance < 50f -> 1200f
@@ -224,14 +269,8 @@ class ElasticOverscrollEffect(
                 }
             }
 
-            val percentage = (abs(overscrollValue) / maxOverscroll).coerceIn(0f, 1f)
-
-            if (percentage > 0f) {
-                onReleased?.invoke(percentage)
-            }
-
             animate(
-                initialValue = overscrollValue,
+                initialValue = mOverscrollValue,
                 targetValue = 0f,
                 animationSpec = spring(
                     dampingRatio = springDampingRatio,
@@ -239,7 +278,7 @@ class ElasticOverscrollEffect(
                 )
             ) { value, _ ->
 
-                overscrollValue = value
+                mOverscrollValue = value
 
                 if (onProgress != null) {
 
@@ -251,11 +290,15 @@ class ElasticOverscrollEffect(
                         roundedProgress = 0f
                     }
 
-                    if (roundedProgress < lastReportedProgress) {
+                    if (roundedProgress < mLastReportedProgress) {
 
-                        lastReportedProgress = roundedProgress
+                        mLastReportedProgress = roundedProgress
 
-                        onProgress?.invoke(roundedProgress)
+                        onProgress?.invoke(roundedProgress, mActiveEdge)
+
+                        if (roundedProgress == 0f) {
+                            mActiveEdge = ElasticOverscrollEdge.NONE
+                        }
                     }
                 }
             }

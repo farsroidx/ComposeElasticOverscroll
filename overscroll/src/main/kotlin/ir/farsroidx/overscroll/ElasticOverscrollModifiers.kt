@@ -28,9 +28,9 @@ fun Modifier.horizontalElasticScrollable(
     springStiffness: Float = Spring.StiffnessMedium,
     @FloatRange(from = 0.1, to = 2.0)
     snapBackForce: Float? = null,
-    lockedEdge: ElasticOverscrollEdgeLock? = null,
-    onProgress: ((percentage: Float) -> Unit)? = null,
-    onReleased: ((percentage: Float) -> Unit)? = null
+    lockedEdge: ElasticOverscrollEdge? = null,
+    onProgress: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null,
+    onReleased: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null
 ): Modifier = scrollable(
     state = state,
     orientation = Orientation.Horizontal,
@@ -60,9 +60,9 @@ fun Modifier.verticalElasticScrollable(
     springStiffness: Float = Spring.StiffnessMedium,
     @FloatRange(from = 0.1, to = 2.0)
     snapBackForce: Float? = null,
-    lockedEdge: ElasticOverscrollEdgeLock? = null,
-    onProgress: ((percentage: Float) -> Unit)? = null,
-    onReleased: ((percentage: Float) -> Unit)? = null
+    lockedEdge: ElasticOverscrollEdge? = null,
+    onProgress: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null,
+    onReleased: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null
 ): Modifier = scrollable(
     state = state,
     orientation = Orientation.Vertical,

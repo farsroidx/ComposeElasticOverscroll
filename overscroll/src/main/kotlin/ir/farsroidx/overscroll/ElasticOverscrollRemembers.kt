@@ -42,9 +42,9 @@ fun rememberElasticOverscrollEffect(
     springStiffness: Float = Spring.StiffnessMedium,
     @FloatRange(from = 0.1, to = 2.0)
     snapBackForce: Float? = null,
-    lockedEdge: ElasticOverscrollEdgeLock? = null,
-    onProgress: ((percentage: Float) -> Unit)? = null,
-    onReleased: ((percentage: Float) -> Unit)? = null
+    lockedEdge: ElasticOverscrollEdge? = null,
+    onProgress: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null,
+    onReleased: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null
 ): OverscrollEffect {
 
     val density = LocalDensity.current
@@ -121,9 +121,9 @@ fun rememberHorizontalElasticOverscroll(
     springStiffness: Float = Spring.StiffnessMedium,
     @FloatRange(from = 0.1, to = 2.0)
     snapBackForce: Float? = null,
-    lockedEdge: ElasticOverscrollEdgeLock? = null,
-    onProgress: ((percentage: Float) -> Unit)? = null,
-    onReleased: ((percentage: Float) -> Unit)? = null
+    lockedEdge: ElasticOverscrollEdge? = null,
+    onProgress: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null,
+    onReleased: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null
 ): OverscrollEffect {
     return rememberElasticOverscrollEffect(
         springDampingRatio = springDampingRatio,
@@ -162,9 +162,9 @@ fun rememberVerticalElasticOverscroll(
     springStiffness: Float = Spring.StiffnessMedium,
     @FloatRange(from = 0.1, to = 2.0)
     snapBackForce: Float? = null,
-    lockedEdge: ElasticOverscrollEdgeLock? = null,
-    onProgress: ((percentage: Float) -> Unit)? = null,
-    onReleased: ((percentage: Float) -> Unit)? = null
+    lockedEdge: ElasticOverscrollEdge? = null,
+    onProgress: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null,
+    onReleased: ((percentage: Float, edge: ElasticOverscrollEdge) -> Unit)? = null
 ): OverscrollEffect {
     return rememberElasticOverscrollEffect(
         orientation = Orientation.Vertical,

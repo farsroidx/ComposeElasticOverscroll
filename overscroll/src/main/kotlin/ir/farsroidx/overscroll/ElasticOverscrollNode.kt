@@ -22,7 +22,7 @@ class ElasticOverscrollNode(
 
     override fun ContentDrawScope.draw() {
 
-        val value = overscrollEffect.overscrollValue
+        val value = overscrollEffect.mOverscrollValue
 
         if (value != 0f) {
 
