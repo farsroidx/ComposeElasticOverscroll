@@ -1,5 +1,14 @@
 <div align="center">
 
+<div align="center">
+    <b>Due to the Iran-US war and the lack of access to some international services, we are currently unable to publish the version to the jitPack and mavenCentral repositories.</b>
+    <br>
+    <br>
+    The versions will be published in the two repositories as soon as possible.
+</div>
+
+---
+
 <img src="files/cover.png" alt="ElasticOverscroll Banner" width="100%">
 
 # 🌟 ElasticOverscroll for Jetpack Compose 🌟
@@ -251,3 +260,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+[![Ask Me Anything!](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://github.com/farsroidx)
