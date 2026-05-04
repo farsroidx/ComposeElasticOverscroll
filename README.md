@@ -32,7 +32,7 @@ Made with ❤️ for the Android Community.
 
 ---
 
-<img src="files/demo.gif" alt="Elastic Overscroll Demo" width="525">
+<img src="files/demo.gif" alt="Elastic Overscroll Demo" width="534">
 <div style="margin=2px"></div>
 <img src="files/demo-25-100.gif" alt="Elastic Overscroll Demo" width="175">
 <img src="files/demo-25-050.gif" alt="Elastic Overscroll Demo" width="175">
