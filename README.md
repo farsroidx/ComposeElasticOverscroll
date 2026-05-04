@@ -21,9 +21,19 @@ Built natively with `Modifier.Node` for maximum 60fps performance and zero unnec
 Made with ❤️ for the Android Community.
 </div>
 
-<img src="files/demo.gif" alt="Elastic Overscroll Demo" width="300">
+---
+
+<img src="files/demo-25-100.gif" alt="Elastic Overscroll Demo" width="300">
+<img src="files/demo-25-050.gif" alt="Elastic Overscroll Demo" width="300">
+<img src="files/demo-25-025.gif" alt="Elastic Overscroll Demo" width="300">
+
+<img src="files/demo-50-100.gif" alt="Elastic Overscroll Demo" width="300">
+<img src="files/demo-50-050.gif" alt="Elastic Overscroll Demo" width="300">
+<img src="files/demo-50-025.gif" alt="Elastic Overscroll Demo" width="300">
 
 </div>
+
+---
 
 ## 🚀 Why ElasticOverscroll?
 
