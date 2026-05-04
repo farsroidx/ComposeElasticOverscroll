@@ -87,7 +87,6 @@ If you have a standard layout that you want to make scrollable with elasticity:
 Column(
     modifier = Modifier
         .fillMaxSize()
-        .verticalElasticScrollableContainer() // Prevents drawing outside bounds
         .verticalElasticScrollable(
             maxStretchRatio = 30, // Stretches up to 30% of screen height
             springDampingRatio = 1f, // No wobble, crisp snap-back
@@ -99,7 +98,6 @@ Column(
 Row(
     modifier = Modifier
         .fillMaxSize()
-        .horizontalElasticScrollableContainer() // Prevents drawing outside bounds
         .horizontalElasticScrollable(
             maxStretchRatio = 30, // Stretches up to 30% of screen width
             springDampingRatio = 1f, // No wobble, crisp snap-back
@@ -110,7 +108,7 @@ Row(
 ```
 
 ### 2. The `LazyColumn` / `LazyRow` Way (🚨 IMPORTANT)
-For Compose `Lazy` lists, they already have their own scrolling logic. You **must** use the standard `Modifier.overscroll()` and pass our remembered effect to it!
+For Compose `Lazy` lists, they already have their own scrolling logic. You **must** use the standard `overscrollEffect` and pass our remembered effect to it!
 
 ```kotlin
 LazyColumn(
@@ -166,7 +164,7 @@ val overscrollEffect = rememberVerticalElasticOverscroll(
 
 Box(modifier = Modifier.fillMaxSize()) {
 
-    LazyColumn(modifier = Modifier.overscroll(overscrollEffect)) {
+    LazyColumn(overscrollEffect = overscrollEffect) {
         // Items...
     }
 
@@ -200,10 +198,11 @@ HorizontalPager(
     // Content
 }
 
+// .
+
 Row(
     modifier = Modifier
         .fillMaxWidth()
-        .horizontalElasticScrollableContainer()
         .horizontalElasticScrollable(
             maxStretchRatio = 15,
             lockedEdge = ElasticOverscrollEdgeLock.START // Locks the right edge in RTL, left in LTR!
@@ -212,6 +211,10 @@ Row(
     // Content
 }
 ```
+
+---
+
+**Note: Prevents drawing outside bounds `horizontalElasticScrollableContainer()`**
 
 ---
 
