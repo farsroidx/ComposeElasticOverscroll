@@ -7,11 +7,15 @@
 **The ultimate, buttery-smooth iOS-like elastic overscroll effect for Android!**  
 Built natively with `Modifier.Node` for maximum 60fps performance and zero unnecessary recompositions.
 
-[![API](https://img.shields.io/badge/API-23%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=23)
+![Min SDK](https://img.shields.io/badge/minSdk-23%2B-orange.svg?style=flat)
 [![Compose](https://img.shields.io/badge/Compose-1.0.0%2B-blue.svg)]()
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/4c0aaa44a2124bafa2666a06d7799f46)](https://app.codacy.com/gh/farsroidx/andromeda/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Maven Central](https://img.shields.io/maven-central/v/ir.farsroidx/overscroll.svg)](https://mvnrepository.com/artifact/ir.farsroidx/overscroll)
-[![](https://jitpack.io/v/farsroidx/ElasticOverscroll.svg)](https://jitpack.io/#farsroidx/ElasticOverscroll)
+![Last Commit](https://img.shields.io/github/last-commit/farsroidx/ElasticOverscroll)
+
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white)
+![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red.svg?style=for-the-badge&logo=heart&logoColor=white)
 
 <div align="center">
 Made with ❤️ for the Android Community.
@@ -46,14 +50,14 @@ dependencyResolutionManagement {
 
 Then, add the dependency to your app-level `build.gradle.kts`:
 
-**Option A: Using Maven Central (`Recommended`)**
+**Option A: Using Maven Central (`Recommended`)** [![Maven Central](https://img.shields.io/maven-central/v/ir.farsroidx/overscroll.svg)](https://mvnrepository.com/artifact/ir.farsroidx/overscroll)
 ```kotlin
 dependencies {
     implementation("ir.farsroidx:overscroll:1.0.0")
 }
 ```
 
-**Option B: Using JitPack**
+**Option B: Using JitPack** [![](https://jitpack.io/v/farsroidx/ElasticOverscroll.svg)](https://jitpack.io/#farsroidx/ElasticOverscroll)
 ```kotlin
 dependencies {
     implementation("com.github.farsroidx:ElasticOverscroll:1.0.0")
