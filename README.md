@@ -2,7 +2,7 @@
 
 <img src="files/cover.png" alt="ElasticOverscroll Banner" width="100%">
 
-# 🌟 ElasticOverscroll for Jetpack Compose
+# 🌟 ElasticOverscroll for Jetpack Compose 🌟
 
 **The ultimate, buttery-smooth iOS-like elastic overscroll effect for Android!**  
 Built natively with `Modifier.Node` for maximum 60fps performance and zero unnecessary recompositions.
@@ -23,13 +23,15 @@ Made with ❤️ for the Android Community.
 
 ---
 
-<img src="files/demo-25-100.gif" alt="Elastic Overscroll Demo" width="300">
-<img src="files/demo-25-050.gif" alt="Elastic Overscroll Demo" width="300">
-<img src="files/demo-25-025.gif" alt="Elastic Overscroll Demo" width="300">
-
-<img src="files/demo-50-100.gif" alt="Elastic Overscroll Demo" width="300">
-<img src="files/demo-50-050.gif" alt="Elastic Overscroll Demo" width="300">
-<img src="files/demo-50-025.gif" alt="Elastic Overscroll Demo" width="300">
+<img src="files/demo.gif" alt="Elastic Overscroll Demo" width="525">
+<div style="margin=2px"></div>
+<img src="files/demo-25-100.gif" alt="Elastic Overscroll Demo" width="175">
+<img src="files/demo-25-050.gif" alt="Elastic Overscroll Demo" width="175">
+<img src="files/demo-25-025.gif" alt="Elastic Overscroll Demo" width="175">
+<div style="margin=2px"></div>
+<img src="files/demo-50-100.gif" alt="Elastic Overscroll Demo" width="175">
+<img src="files/demo-50-050.gif" alt="Elastic Overscroll Demo" width="175">
+<img src="files/demo-50-025.gif" alt="Elastic Overscroll Demo" width="175">
 
 </div>
 
